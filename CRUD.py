@@ -1,7 +1,7 @@
 import pandas as pd
 import function as f
 
-my_df = pd.read_csv("C:\\Users\hienvp\Documents\Project_Python\AppleStore.csv")
+my_df = pd.read_csv("AppleStore.csv")
 
 
 while True:
