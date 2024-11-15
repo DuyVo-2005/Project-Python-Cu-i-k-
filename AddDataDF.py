@@ -1,13 +1,13 @@
 import pandas as pd
 
-file_path = 'AppleStore.csv'
-data = pd.read_csv(file_path)
+file_path = "AppleStore.csv"
+my_df = pd.read_csv(file_path)
 
-print("Initial dataset:")
-print(data.head())
+print("Initial my_dfset:")
+print(my_df.head())
 
-# 1. CREATE a new row in the dataset
-def add_new_row(data):
+# 1. CREATE a new row in the data set
+def add_new_row(my_df):
     new_app = {}
     new_app['id'] = int(input("Enter the app ID: "))
     new_app['track_name'] = input("Enter the app name: ")
@@ -27,14 +27,14 @@ def add_new_row(data):
     new_app['vpp_lic'] = int(input("Enter the VPP license (0 or 1): "))
 
     new_app_df = pd.DataFrame(new_app, index=[0])
-    return pd.concat([data, new_app_df], ignore_index=True)
+    return pd.concat([my_df, new_app_df], ignore_index=True)
 
-# 2. READ data from the dataset
-def read_data(data):
+# 2. READ data from the my_dfset
+def read_data(my_df):
     print()
-    print("Reading dataset:")
-    print(data.head())
-    print(data.describe())
+    print("Reading my_dfset:")
+    print(my_df.head())
+    print(my_df.describe())
 
 # Menu-driven interface for CREATE and READ operations
 while True:
@@ -48,11 +48,11 @@ while True:
     if choice == '0':
         break
     elif choice == '3':
-        data = add_new_row(data)
+        my_df = add_new_row(my_df)
         print()
-        print("Updated dataset with the new app entry:")
-        print(data.tail())
+        print("Updated my_dfset with the new app entry:")
+        print(my_df.tail())
     elif choice == '4':
-        read_data(data)
+        read_data(my_df)
     else:
         print("Invalid choice. Please enter 0, 3, or 4")
