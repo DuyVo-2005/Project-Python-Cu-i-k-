@@ -3,8 +3,8 @@ import pandas as pd
 file_path = "AppleStore.csv"
 my_df = pd.read_csv(file_path)
 
-print("Initial my_dfset:")
-print(my_df.head())
+print("Initial dataset:")
+print(my_df.head(10000))
 
 # 1. CREATE a new row in the data set
 def add_new_row(my_df):
@@ -32,11 +32,10 @@ def add_new_row(my_df):
 # 2. READ data from the my_dfset
 def read_data(my_df):
     print()
-    print("Reading my_dfset:")
-    print(my_df.head())
+    print("Reading dataset:")
+    print(my_df.head(100000))
     print(my_df.describe())
 
-# Menu-driven interface for CREATE and READ operations
 while True:
     print()
     print("0. Exit")
@@ -46,12 +45,14 @@ while True:
     choice = input("Choose your action: ").strip()
 
     if choice == '0':
+        my_df.to_csv(file_path, index=False)
         break
     elif choice == '3':
         my_df = add_new_row(my_df)
         print()
         print("Updated my_dfset with the new app entry:")
         print(my_df.tail())
+        my_df.to_csv(file_path, index=False)
     elif choice == '4':
         read_data(my_df)
     else:
