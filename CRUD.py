@@ -30,7 +30,7 @@ def Create(my_df):
     updated_df = pd.concat([my_df, new_app_df], ignore_index=True)
 
     # save data
-    updated_df.to_csv("C:\\Users\hienvp\Documents\Project_Python\AppleStore.csv")
+    updated_df.to_csv("AppleStore.csv")
     print("Dataset updated and saved ")
 
 
