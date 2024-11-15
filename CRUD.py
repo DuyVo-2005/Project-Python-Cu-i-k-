@@ -1,12 +1,12 @@
 import pandas as pd
 import function as f
 
-my_df = pd.read_csv("C:\\Users\hienvp\Documents\Project_Python\AppleStore.csv")
+my_df = pd.read_csv("AppleStore.csv")
 my_df = my_df.loc[:, ~my_df.columns.str.contains("^Unnamed")]
 
 
 # 1. CREATE a new row in the data set
-def add_new_row(my_df):
+def Create(my_df):
     new_app = {}
     new_app['id'] = int(input("Enter the app ID: "))
     new_app['track_name'] = input("Enter the app name: ")
@@ -30,7 +30,7 @@ def add_new_row(my_df):
 
 
 # 2. READ data from the my_dfset
-def read_data(my_df):
+def Read(my_df):
     print()
     print("Reading my_dfset:")
     print(my_df.head())
@@ -109,7 +109,7 @@ def Update(my_df):
                                         f.list_search[choice - 1] = new_value
                                     
                                 # Overwrite the file and update list search
-                                my_df.to_csv("C:\\Users\hienvp\Documents\Project_Python\AppleStore.csv")
+                                my_df.to_csv("AppleStore.csv")
                                 print("Updated successfully!")
 
                 else:
@@ -157,7 +157,7 @@ def Delete(my_df):
                         my_df.drop(idx_drop, inplace=True)
                         
                         # Overwrite the file and update list search
-                        my_df.to_csv("C:\\Users\hienvp\Documents\Project_Python\AppleStore.csv")
+                        my_df.to_csv("AppleStore.csv")
                         f.list_search.remove(f.list_search[choice - 1])
                         print("Deleted successfully!")
 
