@@ -6,7 +6,8 @@ data = pd.read_csv(file_path)
 print("Initial dataset:")
 print(data.head())
 
-def add_new_row():
+# 1. CREATE a new row in the dataset
+def add_new_row(data):
     new_app = {}
     new_app['id'] = int(input("Enter the app ID: "))
     new_app['track_name'] = input("Enter the app name: ")
@@ -28,25 +29,31 @@ def add_new_row():
     new_app_df = pd.DataFrame(new_app, index=[0])
     return pd.concat([data, new_app_df], ignore_index=True)
 
-def add_new_column():
-    column_name = input("Enter the name of the new column: ")
-    default_value = input("Enter the default value for the new column: ")
-    
-    data[column_name] = default_value
-    return data
+# 2. READ data from the dataset
+def read_data(data):
+    print()
+    print("Reading dataset:")
+    print(data.head())
+    print(data.describe())
 
+# Menu-driven interface for CREATE and READ operations
 while True:
-    choice = input("Do you want to add a new row or a new column? (Enter 'row' or 'column', or 'exit' to quit): ").strip().lower()
+    print()
+    print("0. Exit")
+    print("3. Create")
+    print("4. Read")
     
-    if choice == 'row':
-        data = add_new_row()
-        print("\nUpdated dataset with the new app entry:")
-        print(data.tail())
-    elif choice == 'column':
-        data = add_new_column()
-        print("\nUpdated dataset with the new column:")
-        print(data.tail())
-    elif choice == 'exit':
+    choice = input("Choose your action: ").strip()
+
+    if choice == '0':
+        print("Exiting...")
         break
+    elif choice == '3':
+        data = add_new_row(data)
+        print()
+        print("Updated dataset with the new app entry:")
+        print(data.tail())
+    elif choice == '4':
+        read_data(data)
     else:
-        print("Invalid choice. Please enter 'row', 'column', or 'exit'")
+        print("Invalid choice. Please enter 0, 3, or 4")
