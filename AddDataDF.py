@@ -46,7 +46,6 @@ while True:
     choice = input("Choose your action: ").strip()
 
     if choice == '0':
-        print("Exiting...")
         break
     elif choice == '3':
         data = add_new_row(data)
