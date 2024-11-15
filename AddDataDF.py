@@ -4,10 +4,11 @@ file_path = "AppleStore.csv"
 my_df = pd.read_csv(file_path)
 
 print("Initial dataset:")
-print(my_df.head(10000))
+print(my_df.head(10))
+
 
 # 1. CREATE a new row in the data set
-def add_new_row(my_df):
+def add_new_row(my_df, file_path):
     new_app = {}
     new_app['id'] = int(input("Enter the app ID: "))
     new_app['track_name'] = input("Enter the app name: ")
@@ -26,34 +27,22 @@ def add_new_row(my_df):
     new_app['lang.num'] = int(input("Enter the number of languages: "))
     new_app['vpp_lic'] = int(input("Enter the VPP license (0 or 1): "))
 
+    # create DataFrame from new application and merge into current DataFrame
     new_app_df = pd.DataFrame(new_app, index=[0])
-    return pd.concat([my_df, new_app_df], ignore_index=True)
+    updated_df = pd.concat([my_df, new_app_df], ignore_index=True)
 
-# 2. READ data from the my_dfset
+    # save data
+    updated_df.to_csv(file_path, index=False)
+    print(f"Dataset updated and saved to {file_path}")
+    return updated_df
+
+
+# 2. read data from the my_dfset
 def read_data(my_df):
     print()
     print("Reading dataset:")
-    print(my_df.head(100000))
+    print(my_df.head(100))
     print(my_df.describe())
 
-while True:
-    print()
-    print("0. Exit")
-    print("3. Create")
-    print("4. Read")
-    
-    choice = input("Choose your action: ").strip()
-
-    if choice == '0':
-        my_df.to_csv(file_path, index=False)
-        break
-    elif choice == '3':
-        my_df = add_new_row(my_df)
-        print()
-        print("Updated my_dfset with the new app entry:")
-        print(my_df.tail())
-        my_df.to_csv(file_path, index=False)
-    elif choice == '4':
-        read_data(my_df)
-    else:
-        print("Invalid choice. Please enter 0, 3, or 4")
+my_df = add_new_row(my_df, file_path)
+read_data(my_df)
