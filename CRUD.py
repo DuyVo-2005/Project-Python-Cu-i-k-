@@ -8,32 +8,37 @@ my_df = my_df.loc[:, ~my_df.columns.str.contains("^Unnamed")]
 # 1. CREATE a new row in the data set
 def Create(my_df):
     new_app = {}
-    new_app['id'] = int(input("Enter the app ID: "))
-    new_app['track_name'] = input("Enter the app name: ")
-    new_app['size_bytes'] = int(input("Enter the app size (in bytes): "))
-    new_app['currency'] = input("Enter the currency: ")
-    new_app['price'] = float(input("Enter the app price: "))
-    new_app['rating_count_tot'] = int(input("Enter the total rating count: "))
-    new_app['rating_count_ver'] = int(input("Enter the version rating count: "))
-    new_app['user_rating'] = float(input("Enter the user rating: "))
-    new_app['user_rating_ver'] = float(input("Enter the user rating for the version: "))
-    new_app['ver'] = input("Enter the version: ")
-    new_app['cont_rating'] = input("Enter the content rating: ")
-    new_app['prime_genre'] = input("Enter the primary genre: ")
-    new_app['sup_devices.num'] = int(input("Enter the number of supported devices: "))
-    new_app['ipadSc_urls.num'] = int(input("Enter the number of iPad screenshots: "))
-    new_app['lang.num'] = int(input("Enter the number of languages: "))
-    new_app['vpp_lic'] = int(input("Enter the VPP license (0 or 1): "))
+    new_app["id"] = int(input("Enter the app ID: "))
+    new_app["track_name"] = input("Enter the app name: ")
+    new_app["size_bytes"] = int(input("Enter the app size (in bytes): "))
+    new_app["currency"] = input("Enter the currency: ")
+    new_app["price"] = float(input("Enter the app price: "))
+    new_app["rating_count_tot"] = int(input("Enter the total rating count: "))
+    new_app["rating_count_ver"] = int(input("Enter the version rating count: "))
+    new_app["user_rating"] = float(input("Enter the user rating: "))
+    new_app["user_rating_ver"] = float(input("Enter the user rating for the version: "))
+    new_app["ver"] = input("Enter the version: ")
+    new_app["cont_rating"] = input("Enter the content rating: ")
+    new_app["prime_genre"] = input("Enter the primary genre: ")
+    new_app["sup_devices.num"] = int(input("Enter the number of supported devices: "))
+    new_app["ipadSc_urls.num"] = int(input("Enter the number of iPad screenshots: "))
+    new_app["lang.num"] = int(input("Enter the number of languages: "))
+    new_app["vpp_lic"] = int(input("Enter the VPP license (0 or 1): "))
 
+    # create DataFrame from new application and merge into current DataFrame
     new_app_df = pd.DataFrame(new_app, index=[0])
-    return pd.concat([my_df, new_app_df], ignore_index=True)
+    updated_df = pd.concat([my_df, new_app_df], ignore_index=True)
+
+    # save data
+    updated_df.to_csv("C:\\Users\hienvp\Documents\Project_Python\AppleStore.csv")
+    print("Dataset updated and saved ")
 
 
 # 2. READ data from the my_dfset
 def Read(my_df):
     print()
-    print("Reading my_dfset:")
-    print(my_df.head())
+    print("Reading dataset:")
+    print(my_df.head(100))
     print(my_df.describe())
 
 
