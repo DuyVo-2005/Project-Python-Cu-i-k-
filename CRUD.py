@@ -1,9 +1,3 @@
-import pandas as pd
-import function as f
-
-my_df = pd.read_csv("AppleStore.csv")
-my_df = my_df.loc[:, ~my_df.columns.str.contains("^Unnamed")]
-
 
 # 1. CREATE a new row in the data set
 def Create(my_df):
