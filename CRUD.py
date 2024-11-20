@@ -5,11 +5,7 @@ import function as f
 import pandas as pd
 
 def Create(my_df, new_data):
-    """
-    Tạo một bản ghi mới và thêm vào DataFrame hiện tại.
-    :param my_df: DataFrame hiện tại.
-    :param new_data: Dictionary chứa dữ liệu của bản ghi mới.
-    """
+    
     # Tạo DataFrame từ dữ liệu mới
     new_app_df = pd.DataFrame(new_data, index=[0])
     updated_df = pd.concat([my_df, new_app_df], ignore_index=True)
