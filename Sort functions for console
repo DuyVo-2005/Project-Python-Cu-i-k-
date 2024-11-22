@@ -1,0 +1,26 @@
+def size_bytes_ascending_sort(df):
+    """Function to sort ascendingly size_bytes column"""
+    df.sort_values('size_bytes', ascending = True)
+    return df
+def size_bytes_decreasing_sort(df):
+    """Function to sort decreasingly size_bytes column"""
+    df.sort_values('size_bytes', ascending = False)
+    return df
+
+def price_ascending_sort(df):
+    """Function to sort ascendingly price column"""
+    df.sort_values('price', ascending = True)
+    return df
+def price_decreasing_sort(df):
+    """Function to sort decresingly price column"""
+    df.sort_values('price', ascending = False)
+    return df
+    
+def user_rating_ascending_sort(df):
+    """Function to sort ascendingly user_rating column"""
+    df.sort_values('user_rating', ascending = True)
+    return df
+def user_rating_decreasing_sort(df):
+    """Function to sort decresingly user_rating column"""
+    df.sort_values('user_rating', ascending = False)
+    return df
