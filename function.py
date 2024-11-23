@@ -14,3 +14,5 @@ def Search(x):
 
     if len(list_search) == 0:
         print("Name was not found!")
+    else:
+        print(list_search)
