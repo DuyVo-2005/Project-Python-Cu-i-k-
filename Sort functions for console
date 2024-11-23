@@ -1,26 +1,70 @@
 def size_bytes_ascending_sort(df):
     """Function to sort ascendingly size_bytes column"""
-    df.sort_values('size_bytes', ascending = True)
+    df.sort_values("size_bytes", ascending=True)
     return df
+
+
 def size_bytes_decreasing_sort(df):
     """Function to sort decreasingly size_bytes column"""
-    df.sort_values('size_bytes', ascending = False)
+    df.sort_values("size_bytes", ascending=False)
     return df
+
 
 def price_ascending_sort(df):
     """Function to sort ascendingly price column"""
-    df.sort_values('price', ascending = True)
+    df.sort_values("price", ascending=True)
     return df
+
+
 def price_decreasing_sort(df):
     """Function to sort decresingly price column"""
-    df.sort_values('price', ascending = False)
+    df.sort_values("price", ascending=False)
     return df
-    
+
+
 def user_rating_ascending_sort(df):
     """Function to sort ascendingly user_rating column"""
-    df.sort_values('user_rating', ascending = True)
+    df.sort_values("user_rating", ascending=True)
     return df
+
+
 def user_rating_decreasing_sort(df):
     """Function to sort decresingly user_rating column"""
-    df.sort_values('user_rating', ascending = False)
+    df.sort_values("user_rating", ascending=False)
+    return df
+
+
+def user_rating_ver_ascending_sort(df):
+    """Function to sort ascendingly user_rating_ver column"""
+    df.sort_values("user_rating_ver", ascending=True)
+    return df
+
+
+def user_rating_ver_decreasing_sort(df):
+    """Function to sort decresingly user_rating_ver column"""
+    df.sort_values("user_rating_ver", ascending=False)
+    return df
+
+
+def cont_rating_ver_ascending_sort(df):
+    """Function to sort ascendingly cont_rating column"""
+    df.sort_values("cont_rating_ver", ascending=True)
+    return df
+
+
+def cont_rating_ver_decreasing_sort(df):
+    """Function to sort decresingly cont_rating column"""
+    df.sort_values("cont_rating_ver", ascending=False)
+    return df
+
+
+def sup_devices_num_ascending_sort(df):
+    """Function to sort ascendingly sup_devices.num column"""
+    df.sort_values("sup_devices.num", ascending=True)
+    return df
+
+
+def sup_devices_num_decreasing_sort(df):
+    """Function to sort decresingly sup_devices.num column"""
+    df.sort_values("sup_devices.num", ascending=False)
     return df
