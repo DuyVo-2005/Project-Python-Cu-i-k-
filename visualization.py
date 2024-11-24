@@ -1,12 +1,20 @@
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 
-# Đọc tệp dữ liệu
-df = pd.read_csv("AppleStore.csv")
-print(df.head())
-print(df.describe(include="all"))
+from DataCleaning import check_missing_value, fill_na_value
+from module_for_data_normalization import normalize_data
 
-# biểu đồ 1: Phân phối các thể loại ứng dụng
+df = pd.read_csv("AppleStore.csv")
+
+# làm sạch dữ liệu
+df = fill_na_value(df)
+
+# chuẩn hóa dữ liệu
+df = normalize_data(df)
+
+# trực quan hóa dữ liệu
+# Biểu đồ 1: Phân phối thể loại ứng dụng
 genre_counts = df['prime_genre'].value_counts()
 plt.figure(figsize=(10, 6))
 plt.bar(genre_counts.index, genre_counts.values, color='skyblue')
@@ -21,7 +29,7 @@ plt.show()
 plt.figure(figsize=(10, 6))
 plt.hist(df['rating_count_tot'], bins=50, color='orange', edgecolor='black')
 plt.title('Distribution of Total Ratings')
-plt.xlabel('Total Ratings')
+plt.xlabel('Total Ratings (normalized)')
 plt.ylabel('Frequency')
 plt.yscale('log')  # Sử dụng thang log
 plt.show()
@@ -30,7 +38,7 @@ plt.show()
 plt.figure(figsize=(10, 6))
 plt.hist(df['size_bytes'], bins=50, color='green', edgecolor='black')
 plt.title('Distribution of App Sizes')
-plt.xlabel('App Size (bytes)')
+plt.xlabel('App Size (normalized)')
 plt.ylabel('Frequency')
 plt.xscale('log')  # Sử dụng thang log
 plt.show()
@@ -90,12 +98,25 @@ plt.ylabel('Number of Apps')
 plt.xticks([0, 1], ['Free', 'Paid'], rotation=0)
 plt.show()
 
-# Biểu đồ 10: Thể loại phổ biến nhất
-genre_counts = df['prime_genre'].value_counts()
-plt.figure(figsize=(10, 6))
-genre_counts.plot(kind='pie', autopct='%1.1f%%', startangle=140, colors=plt.cm.tab20.colors)
-plt.title('Most Popular App Genres')
-plt.ylabel('')
+# Biểu đồ 10: Tỷ lệ ứng dụng miễn phí so với ứng dụng trả phí theo 5 thể loại hàng đầu
+top_5_genres = df['prime_genre'].value_counts().index[:5]
+
+# Lọc dữ liệu để chỉ bao gồm 5 thể loại hàng đầu
+df_top_5 = df[df['prime_genre'].isin(top_5_genres)]
+
+# Tính phần trăm miễn phí và trả phí cho 5 thể loại hàng đầu
+genre_paid_free_top_5 = df_top_5.groupby(['prime_genre', 'is_free']).size().unstack(fill_value=0)
+genre_paid_free_top_5['free %'] = (genre_paid_free_top_5[True] / genre_paid_free_top_5.sum(axis=1)) * 100
+genre_paid_free_top_5['paid %'] = (genre_paid_free_top_5[False] / genre_paid_free_top_5.sum(axis=1)) * 100
+
+# Vẽ biểu đồ hình tròn cho 5 thể loại hàng đầu
+fig, axes = plt.subplots(1, 5, figsize=(20, 5))
+for ax, genre in zip(axes, top_5_genres):
+    data = genre_paid_free_top_5.loc[genre, ['free %', 'paid %']]
+    ax.pie(data, labels=data.index, autopct='%1.1f%%', startangle=90, colors=['green', 'gold'])
+    ax.set_title(genre)
+plt.suptitle("Percentage of Free vs Paid Apps by Top 5 Genres", fontsize=16)
+plt.tight_layout()
 plt.show()
 
 # Biểu đồ 11: Tỷ lệ các ứng dụng theo số thiết bị hỗ trợ
