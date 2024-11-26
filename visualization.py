@@ -5,17 +5,21 @@ import matplotlib.pyplot as plt
 from DataCleaning import check_missing_value, fill_na_value
 from module_for_data_normalization import normalize_data
 
+# load the dataset
 df = pd.read_csv("AppleStore.csv")
 
-# làm sạch dữ liệu
+# clean missing data
 df = fill_na_value(df)
 
-# chuẩn hóa dữ liệu
+# normalize the data for better visualization
 df = normalize_data(df)
 
-# phân tích trực quan hóa dữ liệu
-# Biểu đồ 1: phân phối thể loại ứng dụng
+# visualization Functions
+# distribution of App Genres
 def plot_genre_distribution(df):
+    """
+    Visualizes the distribution of app genres
+    """
     genre_counts = df['prime_genre'].value_counts()
     plt.figure(figsize=(10, 6))
     plt.bar(genre_counts.index, genre_counts.values, color='skyblue')
@@ -26,27 +30,24 @@ def plot_genre_distribution(df):
     plt.tight_layout()
     plt.show()
 
-# Biểu đồ 2: phân phối số lượt đánh giá
+# distribution of Total Ratings
 def plot_rating_distribution(df):
+    """
+    Visualizes the distribution of total ratings
+    """
     plt.figure(figsize=(10, 6))
     plt.hist(df['rating_count_tot'], bins=50, color='orange', edgecolor='black')
     plt.title('Distribution of Total Ratings')
     plt.xlabel('Total Ratings (normalized)')
     plt.ylabel('Frequency')
-    plt.yscale('log')  # Sử dụng thang log
+    plt.yscale('log')  # use log scale for better visualization
     plt.show()
 
-# Biểu đồ 3: phân phối đánh giá trung bình
-def plot_user_rating_distribution(df):
-    plt.figure(figsize=(10, 6))
-    plt.hist(df['user_rating'], bins=5, color='purple', edgecolor='black')
-    plt.title('Distribution of User Ratings')
-    plt.xlabel('User Rating')
-    plt.ylabel('Frequency')
-    plt.show()
-
-# Biểu đồ 4: đánh giá trung bình theo thể loại
+# average User Rating by Genre
 def plot_avg_rating_by_genre(df):
+    """
+    Visualizes the average user rating for each app genre
+    """
     avg_rating_by_genre = df.groupby('prime_genre')['user_rating'].mean().sort_values()
     plt.figure(figsize=(12, 8))
     avg_rating_by_genre.plot(kind='barh', color='coral', edgecolor='black')
@@ -55,8 +56,11 @@ def plot_avg_rating_by_genre(df):
     plt.ylabel('Genre')
     plt.show()
 
-# Biểu đồ 5: tổng số lượt đánh giá theo thể loại
+# total Ratings by Genre
 def plot_total_ratings_by_genre(df):
+    """
+    Visualizes the total number of ratings for each genre
+    """
     total_rating_by_genre = df.groupby('prime_genre')['rating_count_tot'].sum().sort_values()
     plt.figure(figsize=(12, 8))
     total_rating_by_genre.plot(kind='barh', color='teal', edgecolor='black')
@@ -65,8 +69,11 @@ def plot_total_ratings_by_genre(df):
     plt.ylabel('Genre')
     plt.show()
 
-# Biểu đồ 6: giá trung bình theo thể loại
+# average Price by Genre
 def plot_avg_price_by_genre(df):
+    """
+    Visualizes the average app price for each genre
+    """
     avg_price_by_genre = df.groupby('prime_genre')['price'].mean().sort_values()
     plt.figure(figsize=(12, 8))
     avg_price_by_genre.plot(kind='barh', color='blue', edgecolor='black')
@@ -75,8 +82,11 @@ def plot_avg_price_by_genre(df):
     plt.ylabel('Genre')
     plt.show()
 
-# Biểu đồ 7: số ứng dụng theo xếp hạng nội dung
+# number of Apps by Content Rating
 def plot_apps_by_content_rating(df):
+    """
+    Visualizes the distribution of apps by content rating
+    """
     content_rating_counts = df['cont_rating'].value_counts()
     plt.figure(figsize=(10, 6))
     content_rating_counts.plot(kind='bar', color='cyan', edgecolor='black')
@@ -85,46 +95,39 @@ def plot_apps_by_content_rating(df):
     plt.ylabel('Number of Apps')
     plt.show()
 
-# Biểu đồ 8: tỷ lệ ứng dụng miễn phí so với trả phí theo 5 thể loại hàng đầu
+# free vs Paid Apps by Top Genres
 def plot_free_vs_paid_by_genre(df, top_n=5):
-    # Chọn N thể loại hàng đầu theo số lượng ứng dụng
+    """
+    Visualizes the percentage of free vs. paid apps in the top N genres
+    """
+    # Identify the top N genres by app count
     top_genres = df['prime_genre'].value_counts().index[:top_n]
 
-    # Lọc dữ liệu cho các thể loại hàng đầu
+    # Filter data to include only apps in the top N genres
     df_top = df[df['prime_genre'].isin(top_genres)]
 
-    # Tính phần trăm cho các ứng dụng miễn phí và trả phí
+    # Calculate the distribution of free and paid apps by genre
     genre_paid_free = df_top.groupby(['prime_genre', df_top['price'] == 0]).size().unstack(fill_value=0)
-    genre_paid_free['free %'] = (genre_paid_free[True] / genre_paid_free.sum(axis=1)) * 100
-    genre_paid_free['paid %'] = (genre_paid_free[False] / genre_paid_free.sum(axis=1)) * 100
+    genre_paid_free.columns = ['Paid', 'Free']
+    genre_paid_free['Free %'] = (genre_paid_free['Free'] / genre_paid_free.sum(axis=1)) * 100
+    genre_paid_free['Paid %'] = (genre_paid_free['Paid'] / genre_paid_free.sum(axis=1)) * 100
 
-    # Tạo biểu đồ hình tròn
+    # Plot pie charts for each genre
     fig, axes = plt.subplots(1, top_n, figsize=(20, 5))
     for ax, genre in zip(axes, top_genres):
-        data = genre_paid_free.loc[genre, ['free %', 'paid %']]
+        data = genre_paid_free.loc[genre, ['Free %', 'Paid %']]
         ax.pie(data, labels=['Free %', 'Paid %'], autopct='%1.1f%%', startangle=90, colors=['green', 'gold'])
         ax.set_title(genre)
 
+    # Set a global title and adjust layout
     plt.suptitle("Percentage of Free vs Paid Apps by Top Genres", fontsize=16)
     plt.tight_layout()
     plt.show()
 
-# Biểu đồ 9: tỷ lệ các ứng dụng theo số thiết bị hỗ trợ
-def plot_apps_by_supported_devices(df):
-    device_support_counts = df['sup_devices.num'].value_counts().sort_index()
-    plt.figure(figsize=(10, 6))
-    device_support_counts.plot(kind='bar', color='gold', edgecolor='black')
-    plt.title('Number of Apps by Supported Devices')
-    plt.xlabel('Number of Supported Devices')
-    plt.ylabel('Number of Apps')
-    plt.show()
-    
 plot_genre_distribution(df)
 plot_rating_distribution(df)
-plot_user_rating_distribution(df)
 plot_avg_rating_by_genre(df)
 plot_total_ratings_by_genre(df)
 plot_avg_price_by_genre(df)
 plot_apps_by_content_rating(df)
 plot_free_vs_paid_by_genre(df, top_n=5)
-plot_apps_by_supported_devices(df)
