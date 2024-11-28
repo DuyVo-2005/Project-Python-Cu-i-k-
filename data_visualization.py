@@ -6,7 +6,7 @@ import data_cleaning
 import data_normalization
 
 # load the dataset
-df = pd.read_csv("C:\\Users\\hienvp\\Documents\\Project_Python\\AppleStore.csv")
+df = pd.read_csv("AppleStore.csv")
 
 # clean missing data
 data_cleaning.start_cleaning(df)
