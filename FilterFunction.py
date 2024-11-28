@@ -36,4 +36,3 @@ def filter_data(dataframe, column, condition, value):
         return dataframe[dataframe[column].str.contains(value, na=False, case=False)]
     else:
         raise ValueError(f"Condition '{condition}' is not supported.")
-
