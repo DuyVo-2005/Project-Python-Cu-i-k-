@@ -47,7 +47,7 @@ def console(dataframe):
         print("5. user_rating")
         print("6. user_rating_ver")
         print("7. sup_devices.num")
-        choice = int(input("Choose column you want to search by: "))
+        choice = int(input("Choose column you want to filter by: "))
         
         if choice == 0:
             break
