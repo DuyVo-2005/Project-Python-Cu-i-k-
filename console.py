@@ -5,8 +5,9 @@ import data_normalization
 import data_visualization
 import search_function_for_console
 import sort_function_for_console
+import filter_function 
 
-file_path = "AppleStore.csv"
+file_path = "C:\\Users\\hienvp\\Documents\\Project_Python\\AppleStore.csv"
 my_df = pd.read_csv(file_path)
 my_df = my_df.loc[:, ~my_df.columns.str.contains("^Unnamed")]
 
@@ -19,6 +20,7 @@ while True:
     print("4. Visualization")
     print("5. Search")
     print("6. Sort")
+    print("7. Filter")
     choice1 = int(input("Your choice: "))
 
     if choice1 == 0:
@@ -31,19 +33,19 @@ while True:
         data_cleaning.start_cleaning(my_df)
 
     elif choice1 == 3:
-        data_normalization.normalize_data(my_df)
-        print(
-            "Data of two columns 'rating_count_tot', 'size_bytes' after normalization"
-        )
-        print(my_df[["rating_count_tot", "size_bytes"]])
+        data_normalization.console(my_df)
 
     elif choice1 == 4:
         data_visualization.console()
 
     elif choice1 == 5:
-        list_search = search_function_for_console.Search(my_df)
-        for i in list_search:
-            print(i)
+        search_function_for_console.console(my_df)
 
-    else:
+    elif choice1 == 6:
         sort_function_for_console.console(my_df)
+        
+    elif choice1 == 7:
+        filter_function.console(my_df)
+        
+    else:
+        print("ERROR!")
