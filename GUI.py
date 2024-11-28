@@ -2,16 +2,13 @@ import tkinter as tk
 import pandas as pd
 from tkinter import ttk
 from tkinter import messagebox
-import search_module
 import CRUD
 import sort
 import clearning
 import visual
-import module_for_data_normalization
-
+import filter
 df = pd.read_csv("AppleStore.csv", sep=",")
 df = clearning.fill_na_value(df)
-df = module_for_data_normalization.normalize_data(df)
 root = tk.Tk()
 root.geometry('1920x900')
 root.resizable(True, True)
@@ -47,6 +44,8 @@ def show_menu():
     button_search.grid(row=1, column=2, padx=10, pady=10)
     button_visual = tk.Button(button_frame, text="Visualization", font=("Times New Roman", 15), width=15, command=show_plot_form)
     button_visual.grid(row=2, column=1, padx=5, pady=10)
+    button_filter = tk.Button(button_frame, text="Filter Data", font=('Time New Roman', 15), width=15, command=show_filter_form)
+    button_filter.grid(row=2, column=0, padx=5, pady=10)
 def show_add_form():
     """Hien thi giao dien update"""
     clear_window()
@@ -57,7 +56,7 @@ def show_add_form():
     form_frame = tk.Frame(root)
     form_frame.pack(pady=20)
     # danh sach cac truong can nhap
-    fields = ["no.",
+    fields = [
         "id", "track_name", "size_bytes", "currency", "price",
         "rating_count_tot", "user_rating", 
         "user_rating_ver", "ver", "cont_rating", "prime_genre", 
@@ -72,12 +71,16 @@ def show_add_form():
         entry.grid(row=i, column=1, padx=10, pady=5)
         entries[field] = entry
 
-    #ham save
+    # Tao nut save
     def save_data():
+        # Tap hop du lieu tu cac truong nhap
         new_data = {field: entry.get() for field, entry in entries.items()}
+        
+        # Goi ham 
         CRUD.Create(df, new_data)
-        df.to_csv("AppleStore.csv", index=False)
         messagebox.showinfo("Notification", "Dataset updated and saved")
+        
+        
 
     save_button = tk.Button(root, text="Save", font=("Times New Roman", 15), command=save_data)
     save_button.pack(pady=10)
@@ -89,23 +92,18 @@ def show_add_form():
 def show_update_form():
     """Hien thi giao dien update"""
     clear_window()
-
     # Tieu de
     label = tk.Label(root, text="Update Data", font=("Times New Roman", 20, "bold"))
     label.pack(pady=10)
-
     # frame tim kiem
     search_frame = tk.Frame(root)
     search_frame.pack(pady=20)
-
     tk.Label(search_frame, text="track name:", font=("Times New Roman", 15)).grid(row=0, column=0, padx=10, pady=5, sticky="w")
     search_entry = tk.Entry(search_frame, font=("Times New Roman", 15), width=30)
     search_entry.grid(row=0, column=1, padx=10, pady=5)
-
     # frame hien thi thong tin
     info_frame = tk.Frame(root)
     info_frame.pack(pady=20)
-
     # Lay danh sach cac cot
     columns = list(df.columns)
 
@@ -113,20 +111,15 @@ def show_update_form():
         #Tim kiem theo track name
         for widget in info_frame.winfo_children():
             widget.destroy()
-
         app_name = search_entry.get()
         filtered_df = df[df["track_name"].str.contains(app_name, case=False)]
-
         if filtered_df.empty:
             messagebox.showinfo(
                 "Notification", f"No item found with name '{app_name}'."
             )
             return
-
         # Hien thi thong tin tim kiem duoc
         tk.Label(info_frame, text=f"Found {len(filtered_df)} item(s):", font=("Times New Roman", 15, "bold")).pack()
-
-
         # form cap nhat
         update_frame = tk.Frame(root)
         update_frame.pack(pady=20)
@@ -139,7 +132,6 @@ def show_update_form():
         tk.Label(update_frame, text="New Value:", font=("Times New Roman", 15)).grid(row=1, column=0, padx=10, pady=5, sticky="w")
         value_entry = tk.Entry(update_frame, font=("Times New Roman", 15), width=30)
         value_entry.grid(row=1, column=1, padx=10, pady=5)
-
         def save_update():
             #Luu thay doi
             column_to_update = column_combobox.get()
@@ -150,7 +142,6 @@ def show_update_form():
             messagebox.showinfo(
                 "Notification", "Dataset updated and saved"
             )
-
         save_button = tk.Button(update_frame, text="Save", font=("Times New Roman", 15), command=save_update)
         save_button.grid(row=2, column=0, columnspan=2, pady=10)
     # Tao nut tim kiem
@@ -230,84 +221,70 @@ def show_delete_form():
 
 
 def show_search_form():
-    "hien thi giao dien tim kiem"
+    """Hiển thị giao diện tìm kiếm"""
     clear_window()
-
-    # Tạo tiêu đề
     label = tk.Label(root, text="Search Data", font=("Times New Roman", 20, "bold"))
     label.pack(pady=10)
-
-    # Frame tìm kiếm
     search_frame = tk.Frame(root)
     search_frame.pack(pady=20)
-
-    # Label và Entry cho từ khóa tìm kiếm
-    tk.Label(search_frame, text="Search by track name:", font=("Times New Roman", 15)).grid(row=0, column=0, padx=10, pady=5, sticky="w")
+    tk.Label(search_frame, text="Search term:", font=("Times New Roman", 15)).grid(row=0, column=0, padx=10, pady=5, sticky="w")
     search_entry = tk.Entry(search_frame, font=("Times New Roman", 15), width=30)
     search_entry.grid(row=0, column=1, padx=10, pady=5)
-
-    # Nút tìm kiếm
-    search_button = tk.Button(search_frame, text="Search", font=("Times New Roman", 15), command=lambda: search_app(search_entry.get()))
-    search_button.grid(row=0, column=2, padx=10, pady=5)
-
-    # Nút quay lại menu
+    tk.Label(search_frame, text="Search in fields:", font=("Times New Roman", 15)).grid(row=1, column=0, padx=10, pady=5, sticky="w")
+    fields = list(df.columns)  # Lấy danh sách cột từ DataFrame
+    selected_fields = tk.StringVar(value=fields[0])
+    fields_menu = tk.OptionMenu(search_frame, selected_fields, *fields)
+    fields_menu.grid(row=1, column=1, padx=10, pady=5)
+    search_button = tk.Button(
+        search_frame,
+        text="Search",
+        font=("Times New Roman", 15),
+        command=lambda: search_app(search_entry.get(), selected_fields.get()),
+    )
+    search_button.grid(row=2, column=0, columnspan=3, padx=10, pady=10)
     back_button = tk.Button(root, text="Back to menu", font=("Times New Roman", 15), command=show_menu)
     back_button.pack(pady=10)
-def search_app(search_term):
-    "Tim tiem theo track name"
+
+def search_app(search_term, field):
     clear_window()
-
-
-    filtered_df = df[df["track_name"].str.contains(search_term, case=False, na=False)]
-
-    if filtered_df.empty:
-        messagebox.showinfo("Notification", f"No results found for '{search_term}'.")
+    if field not in df.columns:
+        messagebox.showinfo("Error", f"Field '{field}' not found in DataFrame.")
         back_button = tk.Button(root, text="Back to menu", font=("Times New Roman", 15), command=show_menu)
         back_button.pack(pady=10)
         return
-
-
-    tk.Label(root, text=f"Found {len(filtered_df)} result(s) for '{search_term}':", font=("Times New Roman", 15, "bold")).pack(pady=10)
-
-
+    filtered_df = df[df[field].astype(str).str.contains(search_term, case=False, na=False)]
+    if filtered_df.empty:
+        messagebox.showinfo("Notification", f"No results found for '{search_term}' in field '{field}'.")
+        back_button = tk.Button(root, text="Back to menu", font=("Times New Roman", 15), command=show_menu)
+        back_button.pack(pady=10)
+        return
+    tk.Label(root, text=f"Found {len(filtered_df)} result(s) for '{search_term}' in field '{field}':", font=("Times New Roman", 15, "bold")).pack(pady=10)
     global current_page, ROWS_PER_PAGE
     current_page = 0
-
-
     show_page(filtered_df, current_page)
 
 def show_page(filtered_df, page):
     """hien thong tin duoi dang phan trang"""
     for widget in root.winfo_children():
         widget.destroy()
-
     frame = tk.Frame(root)
     frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-
     columns = list(filtered_df.columns)
     tree = ttk.Treeview(frame, columns=columns, show="headings", height=ROWS_PER_PAGE)
     for col in columns:
         tree.heading(col, text=col)
         tree.column(col, width=100, anchor="center")
     tree.pack(expand=True, fill=tk.BOTH)
-
-
     start = page * ROWS_PER_PAGE
     end = start + ROWS_PER_PAGE
     for index, row in filtered_df.iloc[start:end].iterrows():
         tree.insert("", "end", values=list(row))
-
-
     button_frame = tk.Frame(root)
     button_frame.pack(pady=20)
-
-
     prev_button = tk.Button(button_frame, text="Previous Page", command=lambda: prev_page(filtered_df), state=tk.DISABLED)
     prev_button.pack(side=tk.LEFT, padx=5, pady=5)
-
     next_button = tk.Button(button_frame, text="Next Page", command=lambda: next_page(filtered_df), state=tk.DISABLED)
     next_button.pack(side=tk.RIGHT, padx=5, pady=5)
-
     back_button = tk.Button(button_frame, text="Back to menu", command=show_menu)
     back_button.pack(side=tk.LEFT, padx=5, pady=5)
     prev_button.config(state=tk.NORMAL if current_page > 0 else tk.DISABLED)
@@ -325,16 +302,16 @@ def prev_page(filtered_df):
 
 def show_sort_form():
     """sap xep theo cac tieu chi:
-            size_bytes ascending
-            size_bytes decreasin
-            price ascending
-            price decreasing
-            user_rating ascending
-            user_rating decreasing
-            cont_rating ascending
-            cont_rating decreasing
-            sup_devices_num ascending
-            sup_devices_num decreasing
+    size_bytes ascending
+    size_bytes decreasin
+    price ascending
+    price decreasing
+    user_rating ascending
+    user_rating decreasing
+    cont_rating ascending
+    cont_rating decreasing
+    sup_devices_num ascending
+    sup_devices_num decreasing
     """
     clear_window()
     label_sort = tk.Label(root, text="Sort", font=("Times New Roman", 20, 'bold'))
@@ -384,6 +361,7 @@ def show_plot_form():
         ("Apps by Supported Devices", lambda: visual.plot_apps_by_supported_devices(df)),
         ("Back to menu", show_menu)
     ]
+
     for index, (text, command) in enumerate(buttons):
         row = index // 3  
         column = index % 3  
@@ -392,5 +370,53 @@ def show_plot_form():
         button.grid(row=row, column=column, padx=5, pady=10, sticky="ew") 
     for col in range(3):
         frame.grid_columnconfigure(col, weight=1, uniform="equal")
+def show_filter_form():
+    """Hiển thị giao diện lọc dữ liệu."""
+    clear_window()
+    label = tk.Label(root, text="Filter Data", font=("Times New Roman", 20, "bold"))
+    label.pack(pady=10)
+    
+    form_frame = tk.Frame(root)
+    form_frame.pack(pady=20)
+    
+    # Nhập cột
+    tk.Label(form_frame, text="Column:", font=("Times New Roman", 15)).grid(row=0, column=0, padx=10, pady=5, sticky="w")
+    column_entry = ttk.Combobox(form_frame, values=list(df.columns), font=("Times New Roman", 15))
+    column_entry.grid(row=0, column=1, padx=10, pady=5)
+    
+    # Nhập điều kiện
+    tk.Label(form_frame, text="Condition:", font=("Times New Roman", 15)).grid(row=1, column=0, padx=10, pady=5, sticky="w")
+    condition_entry = ttk.Combobox(form_frame, values=['>', '<', '==', '!=', '>=', '<=', 'contains'], font=("Times New Roman", 15))
+    condition_entry.grid(row=1, column=1, padx=10, pady=5)
+    
+    # Nhập giá trị
+    tk.Label(form_frame, text="Value:", font=("Times New Roman", 15)).grid(row=2, column=0, padx=10, pady=5, sticky="w")
+    value_entry = tk.Entry(form_frame, font=("Times New Roman", 15))
+    value_entry.grid(row=2, column=1, padx=10, pady=5)
+
+    def apply_filter():
+        try:
+            column = column_entry.get()
+            condition = condition_entry.get()
+            value = value_entry.get()
+
+            if condition in ['>', '<', '>=', '<=', '==', '!=']:
+                value = float(value) if '.' in value else int(value)
+            
+            filtered_df = filter.filter_data(df, column, condition, value)
+            if filtered_df.empty:
+                messagebox.showinfo("Notification", "No data found with given filter.")
+            else:
+                show_page(filtered_df, 0)
+        except ValueError as e:
+            messagebox.showerror("Error", str(e))
+    
+    # Nút Apply và Back
+    apply_button = tk.Button(root, text="Apply Filter", font=("Times New Roman", 15), command=apply_filter)
+    apply_button.pack(pady=10)
+    
+    back_button = tk.Button(root, text="Back to menu", font=("Times New Roman", 15), command=show_menu)
+    back_button.pack(pady=10)
+
 show_menu()
 root.mainloop()
