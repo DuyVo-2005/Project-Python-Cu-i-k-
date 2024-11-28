@@ -251,6 +251,7 @@ def Delete(my_df):
 
 def console():
     while True:
+        print()
         print("0. Exit")
         print("1. Create")
         print("2. Read")
@@ -270,5 +271,8 @@ def console():
         elif choice_user == 3:
             Update(my_df)
 
-        else:
+        elif choice_user == 4:
             Delete(my_df)
+            
+        else:
+            print("ERROR!")
