@@ -72,4 +72,4 @@ def console(df):
                         df = sort_function.sup_devices_num_decreasing_sort(df)
                         print(df[["sup_devices.num"]])
         # print(df["sup_devices.num"])#test kiểm tra từng cột cụ thể
-        df.to_csv("C:\\Users\\hienvp\\Documents\\Project_Python\\AppleStore.csv")
+        df.to_csv("AppleStore.csv")
