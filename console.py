@@ -6,7 +6,7 @@ import data_visualization
 import search_function_for_console
 import sort_function_for_console
 
-file_path = "C:\\Users\\hienvp\\Documents\\Project_Python\\AppleStore.csv"
+file_path = "AppleStore.csv"
 my_df = pd.read_csv(file_path)
 my_df = my_df.loc[:, ~my_df.columns.str.contains("^Unnamed")]
 
