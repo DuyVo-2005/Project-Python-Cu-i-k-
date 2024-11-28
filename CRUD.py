@@ -1,7 +1,7 @@
 import pandas as pd
 import search_function_for_console as f
 
-file_path = "C:\\Users\\hienvp\\Documents\\Project_Python\\AppleStore.csv"
+file_path = "AppleStore.csv"
 my_df = pd.read_csv(file_path)
 my_df = my_df.loc[:, ~my_df.columns.str.contains("^Unnamed")]
 
@@ -187,7 +187,7 @@ def Update(my_df):
                                         f.list_search[choice_2 - 1] = new_value
 
                                 # Overwrite the file and update list search
-                                my_df.to_csv("C:\\Users\\hienvp\\Documents\\Project_Python\\AppleStore.csv")
+                                my_df.to_csv("AppleStore.csv")
                                 print("Updated successfully!")
                 else:
                     print("No result!")
@@ -240,7 +240,7 @@ def Delete(my_df):
                         my_df.drop(idx_drop, inplace=True)
 
                         # Overwrite the file and update list search
-                        my_df.to_csv("C:\\Users\\hienvp\\Documents\\Project_Python\\AppleStore.csv")
+                        my_df.to_csv("AppleStore.csv")
                         f.list_search.remove(f.list_search[choice - 1])
                         print("Deleted successfully!")
 
