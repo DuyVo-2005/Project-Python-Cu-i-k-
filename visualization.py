@@ -1,18 +1,16 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import DataCleaning
+import module_for_data_normalization
 
-from DataCleaning import check_missing_value, fill_na_value
-from module_for_data_normalization import normalize_data
-
-# load the dataset
+# Load dataset
 df = pd.read_csv("AppleStore.csv")
 
-# clean missing data
-df = fill_na_value(df)
-
-# normalize the data for better visualization
-df = normalize_data(df)
+# data cleaning
+DataCleaning.start_cleaning(df)
+# data normalization
+df = module_for_data_normalization.normalize_data(df)
 
 # visualization Functions
 # distribution of App Genres
@@ -43,13 +41,25 @@ def plot_rating_distribution(df):
     plt.yscale('log')  # use log scale for better visualization
     plt.show()
 
+# distribution of Application Sizes
+def plot_sizebytes_distribution(df):
+    """
+    Visualizes the distribution of app size
+    """
+    plt.figure(figsize=(10, 6))
+    plt.hist(df['size_bytes'], bins=50, color='green', edgecolor='black')
+    plt.title('Distribution of App Sizes')
+    plt.xlabel('App Size (bytes)')
+    plt.ylabel('Frequency')
+    plt.xscale('log')  # Sử dụng thang log
+    plt.show()
 # average User Rating by Genre
 def plot_avg_rating_by_genre(df):
     """
     Visualizes the average user rating for each app genre
     """
     avg_rating_by_genre = df.groupby('prime_genre')['user_rating'].mean().sort_values()
-    plt.figure(figsize=(12, 8))
+    plt.figure(figsize=(13, 8))
     avg_rating_by_genre.plot(kind='barh', color='coral', edgecolor='black')
     plt.title('Average User Rating by Genre')
     plt.xlabel('Average Rating')
@@ -62,7 +72,7 @@ def plot_total_ratings_by_genre(df):
     Visualizes the total number of ratings for each genre
     """
     total_rating_by_genre = df.groupby('prime_genre')['rating_count_tot'].sum().sort_values()
-    plt.figure(figsize=(12, 8))
+    plt.figure(figsize=(13, 8))
     total_rating_by_genre.plot(kind='barh', color='teal', edgecolor='black')
     plt.title('Total Ratings by Genre')
     plt.xlabel('Total Ratings')
@@ -75,7 +85,7 @@ def plot_avg_price_by_genre(df):
     Visualizes the average app price for each genre
     """
     avg_price_by_genre = df.groupby('prime_genre')['price'].mean().sort_values()
-    plt.figure(figsize=(12, 8))
+    plt.figure(figsize=(13, 8))
     avg_price_by_genre.plot(kind='barh', color='blue', edgecolor='black')
     plt.title('Average Price by Genre')
     plt.xlabel('Average Price (USD)')
@@ -126,6 +136,7 @@ def plot_free_vs_paid_by_genre(df, top_n=5):
 
 plot_genre_distribution(df)
 plot_rating_distribution(df)
+plot_sizebytes_distribution(df)
 plot_avg_rating_by_genre(df)
 plot_total_ratings_by_genre(df)
 plot_avg_price_by_genre(df)
