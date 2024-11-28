@@ -51,7 +51,7 @@ def plot_sizebytes_distribution(df):
     plt.title('Distribution of App Sizes')
     plt.xlabel('App Size (bytes)')
     plt.ylabel('Frequency')
-    plt.xscale('log')  # Sử dụng thang log
+    plt.xscale('log')
     plt.show()
 # average User Rating by Genre
 def plot_avg_rating_by_genre(df):
