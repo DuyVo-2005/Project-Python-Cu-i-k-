@@ -78,3 +78,51 @@ def sup_devices_num_decreasing_sort(df):
     """Function to sort decresingly sup_devices.num column"""
     df.sort_values("sup_devices.num", ascending=False, inplace=True)
     return df
+
+
+def rating_count_tot_ascending_sort(df):
+    """Function to sort ascendingly rating_count_tot column"""
+    df.sort_values("rating_count_tot", ascending=True, inplace=True)
+    return df
+
+
+def rating_count_tot_decreasing_sort(df):
+    """Function to sort decreasingly rating_count_tot column"""
+    df.sort_values("rating_count_tot", ascending=False, inplace=True)
+    return df
+
+
+def track_name_ascending_sort(df):
+    """Function to sort ascendingly track_name column"""
+    df.sort_values("track_name", ascending=True, inplace=True)
+    return df
+
+
+def track_name_decreasing_sort(df):
+    """Function to sort decreasingly track_name column"""
+    df.sort_values("track_name", ascending=False, inplace=True)
+    return df
+
+
+def prime_genre_ascending_sort(df):
+    """Function to sort ascendingly prime_genre column"""
+    df.sort_values("prime_genre", ascending=True, inplace=True)
+    return df
+
+
+def prime_genre_decreasing_sort(df):
+    """Function to sort decreasingly prime_genre column"""
+    df.sort_values("prime_genre", ascending=False, inplace=True)
+    return df
+
+
+def id_ascending_sort(df):
+    """Function to sort ascendingly id column"""
+    df.sort_values("id", ascending=True, inplace=True)
+    return df
+
+
+def id_decreasing_sort(df):
+    """Function to sort decreasingly id column"""
+    df.sort_values("id", ascending=False, inplace=True)
+    return df
